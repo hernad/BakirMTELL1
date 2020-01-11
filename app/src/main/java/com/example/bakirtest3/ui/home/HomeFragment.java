@@ -11,12 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakirtest3.R;
+import com.example.bakirtest3.ui.Subject;
+import com.example.bakirtest3.ui.SubjectAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+
+    private RecyclerView recyclerView;
+    private SubjectAdapter adapter;
+    private List<Subject> subjectList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,5 +41,25 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //recyclerviewStuff
+        subjectList = new ArrayList<Subject>();
+        recyclerView = view.findViewById(R.id.recyclerView);
+
+        subjectList.add(new Subject("Hemija"));
+        subjectList.add(new Subject("Matematika"));
+        subjectList.add(new Subject("Bosanski"));
+        subjectList.add(new Subject("Engleski"));
+        subjectList.add(new Subject("Biologija"));
+        subjectList.add(new Subject("Fizika"));
+        subjectList.add(new Subject("Psihologija"));
+
+        adapter = new SubjectAdapter(getContext(), subjectList);
+        recyclerView.setAdapter(adapter);
     }
 }

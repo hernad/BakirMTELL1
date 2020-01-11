@@ -32,10 +32,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    RecyclerView recyclerView;
-    SubjectAdapter adapter;
-    List<Subject> subjectList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +59,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        //recyclerviewStuff
-        subjectList = new ArrayList<Subject>();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        subjectList.add(new Subject("Hemija"));
-        subjectList.add(new Subject("Matematika"));
-        subjectList.add(new Subject("Bosanski"));
-        subjectList.add(new Subject("Engleski"));
-        subjectList.add(new Subject("Biologija"));
-        subjectList.add(new Subject("Fizika"));
-        subjectList.add(new Subject("Psihologija"));
-
-        adapter = new SubjectAdapter(this, subjectList);
-        recyclerView.setAdapter(adapter);
-
-
-
     }
 
     @Override

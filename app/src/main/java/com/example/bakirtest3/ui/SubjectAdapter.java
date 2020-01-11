@@ -31,16 +31,12 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         View view = inflater.inflate(R.layout.list_item_subject, null);
         SubjectViewHolder holder = new SubjectViewHolder(view);
         return holder;
-
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull SubjectViewHolder holder, int position) {
         Subject subject = subjectList.get(position);
-
         holder.nameOfSubjectText.setText(subject.getSubjectName());
-
     }
 
     @Override
