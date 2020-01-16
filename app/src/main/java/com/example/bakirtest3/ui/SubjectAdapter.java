@@ -1,9 +1,11 @@
 package com.example.bakirtest3.ui;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
@@ -35,6 +39,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
     private List<Subject> subjectList;
     private Uri mImageUri;
     private StorageReference mStorageRef;
+    MainActivity mainActivity;
 
 
     public SubjectAdapter(Context mCon, List<Subject> productList) {
@@ -71,6 +76,29 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         ImageView noteTakeButton;
         private final static int CAMERA_REQUEST_CODE = 1;
 
+/*
+        public class UplaodActivity extends AppCompatActivity {
+           public static final String EXTRA_MESSAGE = "com.example.bakirtest3.ui.UPLOAD";
+
+
+
+            @Override
+            protected void onCreate(@Nullable Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST_CODE);
+            }
+            @Override
+            protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                mImageUri = data.getData();
+                //uploadFile();
+            }
+
+
+        }
+*/
+
         public SubjectViewHolder(View itemView) {
             super(itemView);
             nameOfSubjectText = itemView.findViewById(R.id.textView2);
@@ -78,45 +106,56 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
             cameraButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent intent = new Intent(mCon, CameraMiddleManActivity.class);
                     startActivity(mCon, intent, null);
+                     //mImageUri = MainActivity.uploadCamera();
+
+                    //Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //if (takePictureIntent.resolveActivity(getPackageManager())
+                    //startActivity(mCon, intent, null);
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    startActivity(mCon, intent, null);
+                    //intent.putExtra(MediaStore.ACTION_IMAGE_CAPTURE, mImageUri);
                     mImageUri = intent.getData();
-                    uploadFile();
+                    uploadFile()*/;
+
                 }
             });
             noteTakeButton = itemView.findViewById(R.id.imageView5);
             noteTakeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent(mCon, NoteTakerActivity.class);
                     startActivity(mCon, intent, null);
-
                 }
             });
         }
-
     }
 
-    private String getFileExtension(Uri uri){
-        ContentResolver  cR = mCon.getContentResolver();
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = mCon.getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void uploadFile() {
-        if (mImageUri != null){
+        if (mImageUri != null) {
+            Toast.makeText(mCon, "Primljen URI", Toast.LENGTH_LONG).show();
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                + "." + getFileExtension(mImageUri));
+                    + "." + getFileExtension(mImageUri));
             fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(mCon, "Snimanje uspjelo", Toast.LENGTH_LONG);
-                    PhotoUpload upload = new PhotoUpload(System.currentTimeMillis()+"mill", taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
+                    PhotoUpload upload = new PhotoUpload(System.currentTimeMillis() + "mill", taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
                 }
             });
 
-        }else {Toast.makeText(mCon, "No file Selected", Toast.LENGTH_LONG).show();}
+        } else {
+            Toast.makeText(mCon, "No file Selected", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 }

@@ -1,6 +1,9 @@
 package com.example.bakirtest3.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.bakirtest3.R;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private final static int CAMERA_REQUEST_CODE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private StorageReference mStorageRef;
 
 
@@ -84,4 +88,28 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+/*
+    public Uri uploadajMe() {
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            return takePictureIntent.getData();
+        }
+
+        return null;
+    }*/
+
+/*    public static Uri uploadCamera() {
+
+        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //startActivityForResult(intent, CAMERA_REQUEST_CODE);
+
+        Context.uploadajMe();
+
+        return null;
+    }*/
 }
+
+
+

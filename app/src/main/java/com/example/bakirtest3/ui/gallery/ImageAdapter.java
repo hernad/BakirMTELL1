@@ -5,15 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.squareup.picasso;
 
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bakirtest3.R;
 import com.example.bakirtest3.ui.PhotoUpload;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,8 +36,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
 
         PhotoUpload uploadCurrent = mUploads.get(position);
-        Picasso.with(mContext).load(uploadCurrent.getmImageUrl())
-                .fit()
+        Glide.with(mContext).load(uploadCurrent.getmImageUrl())
                 .centerCrop()
                 .into(holder.imageView);
 
