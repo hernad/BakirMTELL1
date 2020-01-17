@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.example.bakirtest3.R;
 import com.example.bakirtest3.ui.notetake.NoteTakerActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,7 +39,6 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
     private Context mCon;
     private List<Subject> subjectList;
     private Uri mImageUri;
-    private StorageReference mStorageRef;
     MainActivity mainActivity;
 
 
@@ -60,7 +60,6 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
     public void onBindViewHolder(@NonNull SubjectViewHolder holder, int position) {
         Subject subject = subjectList.get(position);
         holder.nameOfSubjectText.setText(subject.getSubjectName());
-        mStorageRef = FirebaseStorage.getInstance().getReference("Hemija/Hemija-Photos");
     }
 
     @Override

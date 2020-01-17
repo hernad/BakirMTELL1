@@ -61,7 +61,6 @@ public class GalleryFragment extends Fragment {
                 }
                 mAdapter = new ImageAdapter(mCon, mUploads);
                 mRecyclerView.setAdapter(mAdapter);
-
             }
 
             @Override
