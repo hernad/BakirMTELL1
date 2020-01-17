@@ -76,28 +76,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         ImageView noteTakeButton;
         private final static int CAMERA_REQUEST_CODE = 1;
 
-/*
-        public class UplaodActivity extends AppCompatActivity {
-           public static final String EXTRA_MESSAGE = "com.example.bakirtest3.ui.UPLOAD";
 
-
-
-            @Override
-            protected void onCreate(@Nullable Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, CAMERA_REQUEST_CODE);
-            }
-            @Override
-            protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                mImageUri = data.getData();
-                //uploadFile();
-            }
-
-
-        }
-*/
 
         public SubjectViewHolder(View itemView) {
             super(itemView);
@@ -133,29 +112,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         }
     }
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = mCon.getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
-    private void uploadFile() {
-        if (mImageUri != null) {
-            Toast.makeText(mCon, "Primljen URI", Toast.LENGTH_LONG).show();
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                    + "." + getFileExtension(mImageUri));
-            fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(mCon, "Snimanje uspjelo", Toast.LENGTH_LONG);
-                    PhotoUpload upload = new PhotoUpload(System.currentTimeMillis() + "mill", taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
-                }
-            });
-
-        } else {
-            Toast.makeText(mCon, "No file Selected", Toast.LENGTH_LONG).show();
-        }
 
 
-    }
+
 }
