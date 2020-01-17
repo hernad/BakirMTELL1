@@ -46,7 +46,7 @@ public class CameraMiddleManActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE, null);
         mDataRef = FirebaseDatabase.getInstance().getReference("/Hemija/Photos/");
-        mStorageRef = FirebaseStorage.getInstance().getReference("/Hemija/Photos/");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
 
@@ -56,9 +56,7 @@ public class CameraMiddleManActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
-                File image = createImageFile();
-                mImageUri = Uri.fromFile(image);
-                uploadFile();
+                createImageFileAndUpload();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -67,55 +65,64 @@ public class CameraMiddleManActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private File createImageFile() throws IOException {
+    private void createImageFileAndUpload() throws IOException {
         // Create an image file name
         String timeStamp = null;
         String imageFileName = "bakir";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        File imageFile = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        currentPhotoPath = imageFile.getAbsolutePath();
         Long length = image.length();
         Toast.makeText(CameraMiddleManActivity.this, length.toString(), Toast.LENGTH_LONG).show();
-        return image;
-    }
-    private void uploadFile() {
+
+        mImageUri = Uri.fromFile(imageFile);
+
         if (mImageUri != null) {
             Toast.makeText(this, "Primljen URI", Toast.LENGTH_LONG).show();
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getMimeType(this, mImageUri));
-            fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(CameraMiddleManActivity.this, "Snimanje uspjelo", Toast.LENGTH_LONG);
-                    PhotoUpload upload = new PhotoUpload(System.currentTimeMillis() + "mill",
-                            taskSnapshot
-                            .getMetadata()
-                            .getReference()
-                            .getDownloadUrl()
-                            .toString());
-                    String uploadId = mDataRef.push().getKey();
-                    mDataRef.child(uploadId).setValue(upload);
-                    startActivity(new Intent(CameraMiddleManActivity.this, MainActivity.class));
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CameraMiddleManActivity.this, "Nije uspjelo spremanje", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(CameraMiddleManActivity.this, MainActivity.class));
-                }
+
+            // https://firebase.google.com/docs/storage/android/create-reference
+            //StorageReference storageReferenceHemija = mStorageRef.child("Hemija");
+            //StorageReference storageReferenceHemijaPhotos = mStorageRef.child("Hemija/Photos");
+
+            // https://firebase.google.com/docs/storage/android/upload-files
+
+            StorageReference storageReferenceHemijaPhotosSlika = mStorageRef.child("Hemija/Photos/" + mImageUri.getLastPathSegment());
+
+            // Create file metadata including the content type
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                 .setContentType("image/jpg")
+                 .build();
+
+            // Upload the file and metadata
+            uploadTask = storageReferenceHemijaPhotosSlika.putFile( mImageUri, metadata );
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                   @Override
+                   public void onFailure(@NonNull Exception exception) {
+                         // Handle unsuccessful uploads
+                   }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                   @Override
+                   public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                           // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                          // ...
+                    }
             });
+
 
         } else {
             Toast.makeText(this, "No file Selected", Toast.LENGTH_LONG).show();
         }
 
-
     }
+  
     /*private String getFileExtension() {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
